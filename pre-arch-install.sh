@@ -2,7 +2,6 @@ loadkeys us
 timedatectl set-timezone Asia/Kolkata
 timedatectl set-ntp true
 
-#add some partitioning commands of sgdisk
 sgdisk -n 1::+1G --typecode=1:ef00 --change-name=1:'EFI' /dev/vda
 sgdisk -n 2::-0 --typecode=2:8303 --change-name=2:'ROOT' /dev/vda
 
