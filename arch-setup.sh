@@ -14,7 +14,7 @@ passwd billi
 echo "billi ALL=(ALL) ALL" >> /etc/sudoers.d/billi
 sed -i 's/MODULES=()/MODULES=(btrfs)/g' /etc/mkinitcpio.conf
 mkinitcpio -p linux
-grub-install --target=x86_64-efi --boot-directory=/efi --efi-directory=your_boot_directory(/efi) --bootloader-id=GRUB
+grub-install --target=x86_64-efi --boot-directory=/efi --efi-directory=/efi --bootloader-id=GRUB
 grub-mkconfig -o /efi/grub/grub.cfg
 systemctl enable NetworkManager
 systemctl enable reflector.timer
