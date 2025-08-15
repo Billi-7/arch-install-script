@@ -11,16 +11,37 @@ mkfs.btrfs /dev/vda2
 mount /dev/vda2 /mnt
 
 cd /mnt
-
-btrfs subvolume create @
-btrfs subvolume create @opt
-btrfs subvolume create @srv
-btrfs subvolume create @cache
-btrfs subvolume create @images
-btrfs subvolume create @log
-btrfs subvolume create @spool
-btrfs subvolume create @tmp
-btrfs subvolume create @docker
+cd /mnt
+if ! btrfs subvolume list /mnt | grep -q '@'; then
+    btrfs subvolume create @
+fi
+if ! btrfs subvolume list /mnt | grep -q '@home'; then
+    btrfs subvolume create @home
+fi
+if ! btrfs subvolume list /mnt | grep -q '@opt'; then
+    btrfs subvolume create @opt
+fi
+if ! btrfs subvolume list /mnt | grep -q '@srv'; then
+    btrfs subvolume create @srv
+fi
+if ! btrfs subvolume list /mnt | grep -q '@cache'; then
+    btrfs subvolume create @cache
+fi
+if ! btrfs subvolume list /mnt | grep -q '@images'; then
+    btrfs subvolume create @images
+fi
+if ! btrfs subvolume list /mnt | grep -q '@log'; then
+    btrfs subvolume create @log
+fi
+if ! btrfs subvolume list /mnt | grep -q '@spool'; then
+    btrfs subvolume create @spool
+fi
+if ! btrfs subvolume list /mnt | grep -q '@tmp'; then
+    btrfs subvolume create @tmp
+fi
+if ! btrfs subvolume list /mnt | grep -q '@docker'; then
+    btrfs subvolume create @docker
+fi
 
 cd ~
 umount -R /mnt
@@ -35,7 +56,7 @@ mount -o noatime,ssd,compress=zstd:3,space_cache=v2,discard=async,subvol=@log /d
 mount -o noatime,ssd,compress=zstd:3,space_cache=v2,discard=async,subvol=@spool /dev/vda2 --mkdir /mnt/var/spool
 mount -o noatime,ssd,compress=zstd:3,space_cache=v2,discard=async,subvol=@tmp /dev/vda2 --mkdir /mnt/var/tmp
 mount -o noatime,ssd,compress=zstd:3,space_cache=v2,discard=async,subvol=@docker /dev/vda2 --mkdir /mnt/var/lib/docker
-mount /dev/your_efi_partition --mkdir /mnt/efi
+mount /dev/vda1 --mkdir /mnt/efi
 
 cp /etc/pacman.d/mirrorlist /etc/pacman.d/mirrorlist.bak
 reflector --download-timeout 60 --country India,Singapore --age 12 --protocol https --sort rate --save /etc/pacman.d/mirrorlist
