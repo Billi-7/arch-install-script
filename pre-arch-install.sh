@@ -10,7 +10,6 @@ mkfs.btrfs /dev/vda2
 mount /dev/vda2 /mnt
 
 cd /mnt
-cd /mnt
 if ! btrfs subvolume list /mnt | grep -q '@'; then
     btrfs subvolume create @
 fi
