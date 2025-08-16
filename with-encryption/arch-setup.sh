@@ -25,7 +25,7 @@ sudo sed -i '/^GRUB_CMDLINE_LINUX_DEFAULT/s/"$/ cryptdevice=UUID=your_encrypted_
 sudo sed -i "/^GRUB_CMDLINE_LINUX_DEFAULT/s/your_encrypted_partition_uuid/$(blkid -s UUID -o value /dev/vda2)/" /etc/default/grub
 sudo sed -i 's/#GRUB_ENABLE_CRYPTODISK=y/GRUB_ENABLE_CRYPTODISK=y/g' /etc/default/grub
 
-grub-install --target=x86_64-efi  --efi-directory=/efi --bootloader-id=GRUB
+grub-install --target=x86_64-efi  --boot-directory=/efi --efi-directory=/efi --bootloader-id=GRUB
 grub-mkconfig -o /boot/grub/grub.cfg
 grub-mkconfig -o /efi/grub/grub.cfg
 
