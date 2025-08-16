@@ -11,7 +11,7 @@ sgdisk -n 2::-0 --typecode=2:8309 --change-name=2:'ROOT' /dev/vda
 
 cryptsetup --sector-size 4096 --verbose luksFormat /dev/vda2
 echo"enter the passphrase for crypt partition"
-cryptsetup open /dev/vda2 cryptroot
+cryptsetup luksOpen /dev/vda2 cryptroot
 echo"enter the passphrase to open crypt partition"
 mkfs.fat -F32 /dev/vda1
 mkfs.btrfs /dev/mapper/cryptroot
