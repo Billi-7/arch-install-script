@@ -9,7 +9,7 @@ sgdisk -Z /dev/vda
 sgdisk -n 1::+1G --typecode=1:ef00 --change-name=1:'EFI' /dev/vda
 sgdisk -n 2::-0 --typecode=2:8309 --change-name=2:'ROOT' /dev/vda
 
-cryptsetup --sector-size 4096 --verbose luksFormat /dev/vda2
+cryptsetup luksFormat /dev/vda2
 echo"enter the passphrase for crypt partition"
 cryptsetup luksOpen /dev/vda2 cryptroot
 echo"enter the passphrase to open crypt partition"
