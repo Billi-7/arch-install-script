@@ -10,9 +10,9 @@ sgdisk -n 1::+1G --typecode=1:ef00 --change-name=1:'EFI' /dev/vda
 sgdisk -n 2::-0 --typecode=2:8309 --change-name=2:'ROOT' /dev/vda
 
 cryptsetup luksFormat --pbkdf pbkdf2 /dev/vda2
-echo"enter the passphrase for crypt partition"
+echo "enter the passphrase for crypt partition"
 cryptsetup luksOpen /dev/vda2 cryptroot
-echo"enter the passphrase to open crypt partition"
+echo "enter the passphrase to open crypt partition"
 mkfs.fat -F32 /dev/vda1
 mkfs.btrfs /dev/mapper/cryptroot
 mount /dev/mapper/cryptroot /mnt
