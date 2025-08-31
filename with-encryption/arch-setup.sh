@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 
+cd ~
 ln -sf /usr/share/zoneinfo/Asia/Kolkata /etc/localtime
 hwclock --systohc
 sed -i 's/#en_US.UTF-8/en_US.UTF-8/g' /etc/locale.gen
@@ -21,12 +22,12 @@ sed -i 's/MODULES=()/MODULES=(btrfs)/g' /etc/mkinitcpio.conf
 sed -i '55s/filesystem/encrypt filesystem/' /etc/mkinitcpio.conf
 mkinitcpio -p linux
 
-sudo sed -i '/^GRUB_CMDLINE_LINUX_DEFAULT/s/"$/ cryptdevice=UUID=your_encrypted_partition_uuid:cryptroot root=/dev/mapper/cryptroot"/' /etc/default/grub
-sudo sed -i "/^GRUB_CMDLINE_LINUX_DEFAULT/s/your_encrypted_partition_uuid/$(blkid -s UUID -o value /dev/vda2)/" /etc/default/grub
+sudo sed -i 's/GRUB_CMDLINE_LINUX_DEFAULT="loglevel=3 quiet"/GRUB_CMDLINE_LINUX_DEFAULT="loglevel=3 quiet cryptdevice=UUID=your_encrypted_partition_uuid:cryptroot root=/dev/mapper/cryptroot rootflags=subvol=@"/g' /etc/default/grub
+sudo sed -i 's/your_encrypted_partition_uuid/your_encrypted_partition_uuid/g' /etc/default/grub
 sudo sed -i 's/#GRUB_ENABLE_CRYPTODISK=y/GRUB_ENABLE_CRYPTODISK=y/g' /etc/default/grub
 
 grub-install --target=x86_64-efi  --boot-directory=/efi --efi-directory=/efi --bootloader-id=GRUB
-grub-mkconfig -o /boot/grub/grub.cfg
+#grub-mkconfig -o /boot/grub/grub.cfg
 grub-mkconfig -o /efi/grub/grub.cfg
 
 systemctl enable NetworkManager
