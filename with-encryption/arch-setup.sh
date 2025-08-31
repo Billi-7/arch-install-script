@@ -7,15 +7,15 @@ locale-gen
 
 echo "LANG=en_US.UTF-8" >> /etc/locale.conf
 echo "KEYMAP=us" >> /etc/vconsole.conf
-echo "earth" >> /etc/hostname
-echo "127.0.1.1       earth" >> /etc/hosts
+echo "LAB" >> /etc/hostname
+echo "127.0.1.1       LAB" >> /etc/hosts
 
 echo "set the root password"
 passwd
-useradd -m -g users -G wheel billi
+useradd -m -g users -G wheel Billi
 echo "set the user password"
-passwd billi
-echo "billi ALL=(ALL) ALL" >> /etc/sudoers.d/billi
+passwd Billi
+echo "Billi ALL=(ALL) ALL" >> /etc/sudoers.d/Billi
 
 sed -i 's/MODULES=()/MODULES=(btrfs)/g' /etc/mkinitcpio.conf
 sed -i '55s/filesystem/encrypt filesystem/' /etc/mkinitcpio.conf
