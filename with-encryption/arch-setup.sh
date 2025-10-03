@@ -27,7 +27,7 @@ sudo sed -i 's|GRUB_CMDLINE_LINUX_DEFAULT="loglevel=3 quiet"|GRUB_CMDLINE_LINUX_
 sudo sed -i 's|GRUB_CMDLINE_LINUX=""|GRUB_CMDLINE_LINUX="cryptdevice=UUID=your_encrypted_partition_uuid:cryptroot root=/dev/mapper/cryptroot rootflags=subvol=@"|g' /etc/default/grub
 #sudo sed -i 's|your_encrypted_partition_uuid|your_encrypted_partition_uuid|g' /etc/default/grub
 uuid=$(sudo blkid -s UUID -o value /dev/mapper/cryptroot)
-sudo sed -i 's|your_encrypted_partition_uuid|$uuid|g' /etc/default/grub
+sudo sed -i "s|your_encrypted_partition_uuid|$uuid|g" /etc/default/grub
 sudo sed -i 's|#GRUB_ENABLE_CRYPTODISK=y|GRUB_ENABLE_CRYPTODISK=y|g' /etc/default/grub
 
 grub-install --target=x86_64-efi  --boot-directory=/efi --efi-directory=/efi --bootloader-id=GRUB
