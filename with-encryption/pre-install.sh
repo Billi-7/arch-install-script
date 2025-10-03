@@ -72,4 +72,5 @@ pacstrap /mnt base base-devel linux linux-firmware linux-headers sudo nano btrfs
 
 genfstab -U -p /mnt >> /mnt/etc/fstab
 
-#arch-chroot /mnt
+cp arch-setup.sh /mnt/home
+arch-chroot /mnt
