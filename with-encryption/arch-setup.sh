@@ -22,8 +22,10 @@ sed -i 's/MODULES=()/MODULES=(btrfs)/g' /etc/mkinitcpio.conf
 sed -i '55s/filesystem/encrypt filesystem/' /etc/mkinitcpio.conf
 mkinitcpio -p linux
 
-sudo sed -i 's|GRUB_CMDLINE_LINUX_DEFAULT="loglevel=3 quiet"|GRUB_CMDLINE_LINUX_DEFAULT="loglevel=3 quiet cryptdevice=UUID='"`blkid -s UUID -o value /dev/sdX"`' :cryptroot root=/dev/mapper/cryptroot rootflags=subvol=@"|g' /etc/default/grub
-sudo sed -i 's|your_encrypted_partition_uuid|your_encrypted_partition_uuid|g' /etc/default/grub
+#sudo sed -i 's|GRUB_CMDLINE_LINUX_DEFAULT="loglevel=3 quiet"|GRUB_CMDLINE_LINUX_DEFAULT="loglevel=3 quiet cryptdevice=UUID='"`blkid -s UUID -o value /dev/sdX"`' :cryptroot root=/dev/mapper/cryptroot rootflags=subvol=@"|g' /etc/default/grub
+sudo sed -i 's|GRUB_CMDLINE_LINUX_DEFAULT="loglevel=3 quiet"|GRUB_CMDLINE_LINUX_DEFAULT="loglevel=3 quiet cryptdevice=UUID=your_encrypted_partition_uuid:cryptroot root=/dev/mapper/cryptroot rootflags=subvol=@"|g' /etc/default/grub
+#sudo sed -i 's|your_encrypted_partition_uuid|your_encrypted_partition_uuid|g' /etc/default/grub
+sudo sed -i 's|your_encrypted_partition_uuid|'"`blkid -s UUID -o value /dev/sdX"`'|g' /etc/default/grub
 sudo sed -i 's|#GRUB_ENABLE_CRYPTODISK=y|GRUB_ENABLE_CRYPTODISK=y|g' /etc/default/grub
 
 grub-install --target=x86_64-efi  --boot-directory=/efi --efi-directory=/efi --bootloader-id=GRUB
