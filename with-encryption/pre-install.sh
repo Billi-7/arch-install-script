@@ -5,15 +5,27 @@ timedatectl set-ntp true
 
 umount -R /mnt
 
-sgdisk -Z /dev/vda
-sgdisk -n 1::+1G --typecode=1:ef00 --change-name=1:'EFI' /dev/vda
-sgdisk -n 2::-0 --typecode=2:8309 --change-name=2:'ROOT' /dev/vda
+lsblk
+echo "enter the disk to partition"
+read disk
 
-cryptsetup luksFormat --pbkdf pbkdf2 /dev/vda2
+if [[ "${DISK}" =~ "nvme" ]]; then
+    esp=${DISK}p1
+    main=${DISK}p2
+else
+    esp=${DISK}1
+    main=${DISK}2
+fi
+
+sgdisk -Z ${disk}
+sgdisk -n 1::+1G --typecode=1:ef00 --change-name=1:'EFI' ${esp}
+sgdisk -n 2::-0 --typecode=2:8309 --change-name=2:'ROOT' ${main}
+
+cryptsetup luksFormat --pbkdf pbkdf2 ${main}
 echo "enter the passphrase for crypt partition"
-cryptsetup luksOpen /dev/vda2 cryptroot
+cryptsetup luksOpen ${main} cryptroot
 echo "enter the passphrase to open crypt partition"
-mkfs.fat -F32 /dev/vda1
+mkfs.fat -F32 ${esp}
 mkfs.btrfs /dev/mapper/cryptroot
 mount /dev/mapper/cryptroot /mnt
 
@@ -62,7 +74,7 @@ mount -o noatime,ssd,compress=zstd:3,space_cache=v2,discard=async,subvol=@log /d
 mount -o noatime,ssd,compress=zstd:3,space_cache=v2,discard=async,subvol=@spool /dev/mapper/cryptroot --mkdir /mnt/var/spool
 mount -o noatime,ssd,compress=zstd:3,space_cache=v2,discard=async,subvol=@tmp /dev/mapper/cryptroot --mkdir /mnt/var/tmp
 mount -o noatime,ssd,compress=zstd:3,space_cache=v2,discard=async,subvol=@docker /dev/mapper/cryptroot --mkdir /mnt/var/lib/docker
-mount /dev/vda1 --mkdir /mnt/efi
+mount ${esp} --mkdir /mnt/efi
 
 cp /etc/pacman.d/mirrorlist /etc/pacman.d/mirrorlist.bak
 reflector --download-timeout 60 --country India,Singapore --age 12 --protocol https --sort rate --save /etc/pacman.d/mirrorlist
