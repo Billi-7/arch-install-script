@@ -18,6 +18,9 @@ echo "set the user password"
 passwd Billi
 echo "Billi ALL=(ALL) ALL" >> /etc/sudoers.d/Billi
 
+pacman -Syu -y
+pacman -S grub grub-btrfs efibootmgr -y
+
 sed -i 's/MODULES=()/MODULES=(btrfs)/g' /etc/mkinitcpio.conf
 sed -i '55s/filesystem/encrypt filesystem/' /etc/mkinitcpio.conf
 mkinitcpio -p linux
