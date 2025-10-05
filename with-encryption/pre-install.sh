@@ -9,12 +9,12 @@ lsblk
 echo "enter the disk to partition"
 read disk
 
-if [[ "${DISK}" =~ "nvme" ]]; then
-    esp=${DISK}p1
-    main=${DISK}p2
+if [[ "${disk}" =~ "nvme" ]]; then
+    esp=${disk}p1
+    main=${disk}p2
 else
-    esp=${DISK}1
-    main=${DISK}2
+    esp=${disk}1
+    main=${disk}2
 fi
 
 sgdisk -Z ${disk}
