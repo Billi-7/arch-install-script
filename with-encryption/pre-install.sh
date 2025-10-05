@@ -9,7 +9,7 @@ lsblk
 echo "enter the disk to partition"
 read disk
 
-echo "enter the disk type"
+echo "enter the disk type eg: nvme, sda, vda"
 read type
 
 if [[ "${type}" =~ "nvme" ]]; then
@@ -21,8 +21,8 @@ else
 fi
 
 sgdisk -Z ${disk}
-sgdisk -n 1::+1G --typecode=1:ef00 --change-name=1:'EFI' ${esp}
-sgdisk -n 2::-0 --typecode=2:8309 --change-name=2:'ROOT' ${main}
+sgdisk -n 1::+1G --typecode=1:ef00 --change-name=1:'EFI' ${disk}
+sgdisk -n 2::-0 --typecode=2:8309 --change-name=2:'ROOT' ${disk}
 
 cryptsetup luksFormat --pbkdf pbkdf2 ${main}
 echo "enter the passphrase for crypt partition"
