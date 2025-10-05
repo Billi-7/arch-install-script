@@ -9,7 +9,10 @@ lsblk
 echo "enter the disk to partition"
 read disk
 
-if [[ "${disk}" =~ "nvme" ]]; then
+echo "enter the disk type"
+read type
+
+if [[ "${type}" =~ "nvme" ]]; then
     esp=${disk}p1
     main=${disk}p2
 else
