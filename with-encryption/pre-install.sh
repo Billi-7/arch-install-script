@@ -80,6 +80,7 @@ mount -o noatime,ssd,compress=zstd:3,space_cache=v2,discard=async,subvol=@docker
 mount ${esp} --mkdir /mnt/efi
 
 cp /etc/pacman.d/mirrorlist /etc/pacman.d/mirrorlist.bak
+echo "using reflector to genereate the mirrorlist"
 reflector --download-timeout 60 --country India,Singapore --age 12 --protocol https --sort rate --save /etc/pacman.d/mirrorlist
 pacman -Sy
 
