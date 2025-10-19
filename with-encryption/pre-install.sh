@@ -84,7 +84,7 @@ echo "using reflector to genereate the mirrorlist"
 reflector --download-timeout 60 --country India,Singapore --age 12 --protocol https --sort rate --save /etc/pacman.d/mirrorlist
 pacman -Sy
 
-pacstrap /mnt base base-devel linux linux-firmware linux-headers sudo nano btrfs-progs networkmanager network-manager-applet man-db man-pages texinfo git grub grub-btrfs reflector efibootmgr
+pacstrap /mnt base base-devel linux linux-firmware linux-headers sudo nano btrfs-progs inotify-tools networkmanager network-manager-applet man-db man-pages texinfo git grub grub-btrfs reflector efibootmgr
 
 genfstab -U -p /mnt >> /mnt/etc/fstab
 
