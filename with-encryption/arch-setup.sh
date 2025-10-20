@@ -25,6 +25,10 @@ sed -i 's/MODULES=()/MODULES=(btrfs)/g' /etc/mkinitcpio.conf
 sed -i '55s/filesystem/encrypt filesystem/' /etc/mkinitcpio.conf
 mkinitcpio -p linux
 
+lsblk
+echo "enter the encrypted partition preceeding with /dev/"
+read disk
+
 echo "enter the disk type eg: nvme, sda, vda"
 read type
 
