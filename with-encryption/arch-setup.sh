@@ -26,7 +26,7 @@ sed -i '55s/filesystem/encrypt filesystem/' /etc/mkinitcpio.conf
 mkinitcpio -p linux
 
 lsblk
-echo "enter the encrypted partition preceeding with /dev/"
+echo "enter the disk you partitioned preceeding with /dev/"
 read disk
 
 echo "enter the disk type eg: nvme, sda, vda"
