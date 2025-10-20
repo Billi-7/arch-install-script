@@ -6,7 +6,7 @@ timedatectl set-ntp true
 umount -R /mnt
 
 lsblk
-echo "enter the disk to partition"
+echo "enter the disk to partition preceeding with /dev/"
 read disk
 
 echo "enter the disk type eg: nvme, sda, vda"
