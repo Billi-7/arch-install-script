@@ -25,11 +25,22 @@ sed -i 's/MODULES=()/MODULES=(btrfs)/g' /etc/mkinitcpio.conf
 sed -i '55s/filesystem/encrypt filesystem/' /etc/mkinitcpio.conf
 mkinitcpio -p linux
 
+echo "enter the disk type eg: nvme, sda, vda"
+read type
+
+if [[ "${type}" =~ "nvme" ]]; then
+    esp=${disk}p1
+    main=${disk}p2
+else
+    esp=${disk}1
+    main=${disk}2
+fi
+
 #sudo sed -i 's|GRUB_CMDLINE_LINUX_DEFAULT="loglevel=3 quiet"|GRUB_CMDLINE_LINUX_DEFAULT="loglevel=3 quiet cryptdevice=UUID='"`blkid -s UUID -o value /dev/sdX"`' :cryptroot root=/dev/mapper/cryptroot rootflags=subvol=@"|g' /etc/default/grub
 sudo sed -i 's|GRUB_CMDLINE_LINUX_DEFAULT="loglevel=3 quiet"|GRUB_CMDLINE_LINUX_DEFAULT="loglevel=3 quiet cryptdevice=UUID=your_encrypted_partition_uuid:cryptroot root=/dev/mapper/cryptroot rootflags=subvol=@"|g' /etc/default/grub
 sudo sed -i 's|GRUB_CMDLINE_LINUX=""|GRUB_CMDLINE_LINUX="cryptdevice=UUID=your_encrypted_partition_uuid:cryptroot root=/dev/mapper/cryptroot rootflags=subvol=@"|g' /etc/default/grub
 #sudo sed -i 's|your_encrypted_partition_uuid|your_encrypted_partition_uuid|g' /etc/default/grub
-uuid=$(sudo blkid -s UUID -o value /dev/mapper/cryptroot)
+uuid=$(sudo blkid -s UUID -o value $main)
 sudo sed -i "s|your_encrypted_partition_uuid|$uuid|g" /etc/default/grub
 sudo sed -i 's|#GRUB_ENABLE_CRYPTODISK=y|GRUB_ENABLE_CRYPTODISK=y|g' /etc/default/grub
 
