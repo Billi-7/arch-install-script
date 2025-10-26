@@ -24,4 +24,4 @@ sudo sed -i 's|PRUNENAMES = "|PRUNENAMES = ".snapshots |g' /etc/updatedb.conf
 sed -i '55s/fsck/fsck grub-btrfs-overlayfs/' /etc/mkinitcpio.conf
 sudo mkinitcpio -p linux
 sudo systemctl enable --now grub-btrfsd.service
-grub-mkconfig -o /efi/grub/grub.cfg
+sudo grub-mkconfig -o /efi/grub/grub.cfg
