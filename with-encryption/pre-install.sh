@@ -63,6 +63,9 @@ fi
 if ! btrfs subvolume list /mnt | grep -q '@docker'; then
     btrfs subvolume create @docker
 fi
+if ! btrfs subvolume list /mnt | grep -q '@ollama'; then
+    btrfs subvolume create @ollama
+fi
 
 cd ~
 umount -R /mnt
@@ -72,11 +75,12 @@ mount -o noatime,ssd,compress=zstd:3,space_cache=v2,discard=async,subvol=@home /
 mount -o noatime,ssd,compress=zstd:3,space_cache=v2,discard=async,subvol=@opt /dev/mapper/cryptroot --mkdir /mnt/opt
 mount -o noatime,ssd,compress=zstd:3,space_cache=v2,discard=async,subvol=@srv /dev/mapper/cryptroot --mkdir /mnt/srv
 mount -o noatime,ssd,compress=zstd:3,space_cache=v2,discard=async,subvol=@cache /dev/mapper/cryptroot --mkdir /mnt/var/cache
-mount -o noatime,ssd,compress=zstd:3,space_cache=v2,discard=async,subvol=@images /dev/mapper/cryptroot --mkdir /mnt/var/liv/libvirt/images
+mount -o noatime,ssd,compress=zstd:3,space_cache=v2,discard=async,subvol=@images /dev/mapper/cryptroot --mkdir /mnt/var/lib/libvirt/images
 mount -o noatime,ssd,compress=zstd:3,space_cache=v2,discard=async,subvol=@log /dev/mapper/cryptroot --mkdir /mnt/var/log
 mount -o noatime,ssd,compress=zstd:3,space_cache=v2,discard=async,subvol=@spool /dev/mapper/cryptroot --mkdir /mnt/var/spool
 mount -o noatime,ssd,compress=zstd:3,space_cache=v2,discard=async,subvol=@tmp /dev/mapper/cryptroot --mkdir /mnt/var/tmp
 mount -o noatime,ssd,compress=zstd:3,space_cache=v2,discard=async,subvol=@docker /dev/mapper/cryptroot --mkdir /mnt/var/lib/docker
+mount -o noatime,ssd,compress=zstd:3,space_cache=v2,discard=async,subvol=@docker /dev/mapper/cryptroot --mkdir /mnt/var/lib/ollama
 mount ${esp} --mkdir /mnt/efi
 
 cp /etc/pacman.d/mirrorlist /etc/pacman.d/mirrorlist.bak
