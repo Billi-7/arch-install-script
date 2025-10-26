@@ -50,7 +50,7 @@ mount -o noatime,ssd,compress=zstd:3,space_cache=v2,discard=async,subvol=@home /
 mount -o noatime,ssd,compress=zstd:3,space_cache=v2,discard=async,subvol=@opt /dev/vda2 --mkdir /mnt/opt
 mount -o noatime,ssd,compress=zstd:3,space_cache=v2,discard=async,subvol=@srv /dev/vda2 --mkdir /mnt/srv
 mount -o noatime,ssd,compress=zstd:3,space_cache=v2,discard=async,subvol=@cache /dev/vda2 --mkdir /mnt/var/cache
-mount -o noatime,ssd,compress=zstd:3,space_cache=v2,discard=async,subvol=@images /dev/vda2 --mkdir /mnt/var/liv/libvirt/images
+mount -o noatime,ssd,compress=zstd:3,space_cache=v2,discard=async,subvol=@images /dev/vda2 --mkdir /mnt/var/lib/libvirt/images
 mount -o noatime,ssd,compress=zstd:3,space_cache=v2,discard=async,subvol=@log /dev/vda2 --mkdir /mnt/var/log
 mount -o noatime,ssd,compress=zstd:3,space_cache=v2,discard=async,subvol=@spool /dev/vda2 --mkdir /mnt/var/spool
 mount -o noatime,ssd,compress=zstd:3,space_cache=v2,discard=async,subvol=@tmp /dev/vda2 --mkdir /mnt/var/tmp
