@@ -1,10 +1,9 @@
 #!/usr/bin/env bash
 
-pacman -Sy
+sudo pacman -Syu
 
 sudo pacman -S hyprland kitty wofi snapper snap-pac pipewire pipewire-jack pipewire-pulse intel-ucode mlocate sddm
 
-sudo pacman -Syu
 git clone https://aur.archlinux.org/yay.git
 cd yay
 makepkg -si
