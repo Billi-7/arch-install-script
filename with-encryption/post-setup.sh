@@ -20,7 +20,7 @@ sudo snapper -c home set-config ALLOW_USERS="$USER" SYNCACL=yes
 #sudo nano /etc/updatedb.conf (now add .snapshots in prunenames)
 sudo sed -i 's|PRUNENAMES = "|PRUNENAMES = ".snapshots |g' /etc/updatedb.conf
 #sudo nano /etc/mkinitcpio.conf (now add grub-btrfs-overlayfs in hooks)
-sed -i '55s/fsck/fsck grub-btrfs-overlayfs/' /etc/mkinitcpio.conf
+sudo sed -i '55s/fsck/fsck grub-btrfs-overlayfs/' /etc/mkinitcpio.conf
 sudo mkinitcpio -p linux
 sudo systemctl enable --now grub-btrfsd.service
 sudo grub-mkconfig -o /efi/grub/grub.cfg
