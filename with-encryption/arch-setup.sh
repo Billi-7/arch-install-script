@@ -21,10 +21,6 @@ echo "Billi ALL=(ALL) ALL" >> /etc/sudoers.d/Billi
 pacman -Syu -y
 pacman -S grub grub-btrfs efibootmgr -y
 
-sed -i 's/MODULES=()/MODULES=(btrfs)/g' /etc/mkinitcpio.conf
-sed -i '55s/filesystem/encrypt filesystem/' /etc/mkinitcpio.conf
-mkinitcpio -p linux
-
 lsblk
 echo "enter the disk you partitioned preceeding with /dev/"
 read disk
@@ -40,9 +36,17 @@ else
     main=${disk}2
 fi
 
+dd bs=512 count=4 if=/dev/random iflag=fullblock | install -m 0600 /dev/stdin /etc/cryptsetup-keys.d/root.key
+cryptsetup luksAddKey $main /etc/cryptsetup-keys.d/root.key
+
+sed -i 's/FILES=()/FILES=(/etc/cryptsetup-keys.d/root.key)/g' /etc/mkinitcpio.conf
+sed -i 's/MODULES=()/MODULES=(btrfs)/g' /etc/mkinitcpio.conf
+sed -i '55s/filesystem/encrypt filesystem/' /etc/mkinitcpio.conf
+mkinitcpio -p linux
+
 #sudo sed -i 's|GRUB_CMDLINE_LINUX_DEFAULT="loglevel=3 quiet"|GRUB_CMDLINE_LINUX_DEFAULT="loglevel=3 quiet cryptdevice=UUID='"`blkid -s UUID -o value /dev/sdX"`' :cryptroot root=/dev/mapper/cryptroot rootflags=subvol=@"|g' /etc/default/grub
-sudo sed -i 's|GRUB_CMDLINE_LINUX_DEFAULT="loglevel=3 quiet"|GRUB_CMDLINE_LINUX_DEFAULT="loglevel=3 quiet cryptdevice=UUID=your_encrypted_partition_uuid:cryptroot root=/dev/mapper/cryptroot rootflags=subvol=@"|g' /etc/default/grub
-sudo sed -i 's|GRUB_CMDLINE_LINUX=""|GRUB_CMDLINE_LINUX="cryptdevice=UUID=your_encrypted_partition_uuid:cryptroot root=/dev/mapper/cryptroot rootflags=subvol=@"|g' /etc/default/grub
+sudo sed -i 's|GRUB_CMDLINE_LINUX_DEFAULT="loglevel=3 quiet"|GRUB_CMDLINE_LINUX_DEFAULT="loglevel=3 quiet cryptdevice=UUID=your_encrypted_partition_uuid:cryptroot root=/dev/mapper/cryptroot rootflags=subvol=@ cryptkey=rootfs:/etc/cryptsetup-keys.d/root.key"|g' /etc/default/grub
+sudo sed -i 's|GRUB_CMDLINE_LINUX=""|GRUB_CMDLINE_LINUX="cryptdevice=UUID=your_encrypted_partition_uuid:cryptroot root=/dev/mapper/cryptroot rootflags=subvol=@ cryptkey=rootfs:/etc/cryptsetup-keys.d/root.key"|g' /etc/default/grub
 #sudo sed -i 's|your_encrypted_partition_uuid|your_encrypted_partition_uuid|g' /etc/default/grub
 uuid=$(sudo blkid -s UUID -o value $main)
 sudo sed -i "s|your_encrypted_partition_uuid|$uuid|g" /etc/default/grub
