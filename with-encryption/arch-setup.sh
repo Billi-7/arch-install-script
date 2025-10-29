@@ -39,7 +39,7 @@ fi
 dd bs=512 count=4 if=/dev/random iflag=fullblock | install -m 0600 /dev/stdin /etc/cryptsetup-keys.d/root.key
 cryptsetup luksAddKey $main /etc/cryptsetup-keys.d/root.key
 
-sed -i 's/FILES=()/FILES=(/etc/cryptsetup-keys.d/root.key)/g' /etc/mkinitcpio.conf
+sed -i 's|FILES=()|FILES=(/etc/cryptsetup-keys.d/root.key)|g' /etc/mkinitcpio.conf
 sed -i 's/MODULES=()/MODULES=(btrfs)/g' /etc/mkinitcpio.conf
 sed -i '55s/filesystem/encrypt filesystem/' /etc/mkinitcpio.conf
 mkinitcpio -p linux
