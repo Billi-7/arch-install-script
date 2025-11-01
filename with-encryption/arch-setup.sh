@@ -19,7 +19,7 @@ passwd Billi
 echo "Billi ALL=(ALL) ALL" >> /etc/sudoers.d/Billi
 
 pacman -Syu -y
-pacman -S grub grub-btrfs efibootmgr -y
+pacman -S grub grub-btrfs efibootmgr inotify-tools grub grub-btrfs -y
 
 lsblk
 echo "enter the disk you partitioned preceeding with /dev/"
