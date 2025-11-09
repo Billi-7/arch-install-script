@@ -53,7 +53,7 @@ sudo sed -i "s|your_encrypted_partition_uuid|$uuid|g" /etc/default/grub
 sudo sed -i 's|#GRUB_ENABLE_CRYPTODISK=y|GRUB_ENABLE_CRYPTODISK=y|g' /etc/default/grub
 
 #mkdir /boot/grub
-ln -s /efi/grub /boot/grub
+#ln -s /efi/grub /boot/grub
 grub-install --target=x86_64-efi  --boot-directory=/efi --efi-directory=/efi --bootloader-id=GRUB
 #grub-mkconfig -o /boot/grub/grub.cfg
 grub-mkconfig -o /efi/grub/grub.cfg
