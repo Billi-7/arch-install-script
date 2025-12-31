@@ -51,6 +51,7 @@ sudo sed -i 's|GRUB_CMDLINE_LINUX=""|GRUB_CMDLINE_LINUX="cryptdevice=UUID=your_e
 uuid=$(sudo blkid -s UUID -o value $main)
 sudo sed -i "s|your_encrypted_partition_uuid|$uuid|g" /etc/default/grub
 sudo sed -i 's|#GRUB_ENABLE_CRYPTODISK=y|GRUB_ENABLE_CRYPTODISK=y|g' /etc/default/grub
+sudo sed -i 's|/boot/grub|/efi/grub|g' /etc/grub.d/41_snapshots-btrfs
 
 #mkdir /boot/grub
 #ln -s /efi/grub /boot/grub
