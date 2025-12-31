@@ -41,7 +41,8 @@ cryptsetup luksAddKey $main /etc/cryptsetup-keys.d/root.key
 
 sed -i 's|FILES=()|FILES=(/etc/cryptsetup-keys.d/root.key)|g' /etc/mkinitcpio.conf
 sed -i 's/MODULES=()/MODULES=(btrfs)/g' /etc/mkinitcpio.conf
-sed -i '55s/filesystem/encrypt filesystem/' /etc/mkinitcpio.conf
+sed -i 's/\(block \)\(filesystems\)/\1encrypt \2/' /etc/mkinitcpio.conf
+#sed -i '55s/filesystem/encrypt filesystem/' /etc/mkinitcpio.conf
 mkinitcpio -p linux
 
 #sudo sed -i 's|GRUB_CMDLINE_LINUX_DEFAULT="loglevel=3 quiet"|GRUB_CMDLINE_LINUX_DEFAULT="loglevel=3 quiet cryptdevice=UUID='"`blkid -s UUID -o value /dev/sdX"`' :cryptroot root=/dev/mapper/cryptroot rootflags=subvol=@"|g' /etc/default/grub
@@ -53,6 +54,7 @@ sudo sed -i "s|your_encrypted_partition_uuid|$uuid|g" /etc/default/grub
 sudo sed -i 's|#GRUB_ENABLE_CRYPTODISK=y|GRUB_ENABLE_CRYPTODISK=y|g' /etc/default/grub
 sudo sed -i 's|/boot/grub|/efi/grub|g' /etc/grub.d/41_snapshots-btrfs
 
+mkinitcpio -P linux
 #mkdir /boot/grub
 #ln -s /efi/grub /boot/grub
 grub-install --target=x86_64-efi  --boot-directory=/efi --efi-directory=/efi --bootloader-id=GRUB
