@@ -80,7 +80,7 @@ mount -o noatime,ssd,compress=zstd:3,space_cache=v2,discard=async,subvol=@log /d
 mount -o noatime,ssd,compress=zstd:3,space_cache=v2,discard=async,subvol=@spool /dev/mapper/cryptroot --mkdir /mnt/var/spool
 mount -o noatime,ssd,compress=zstd:3,space_cache=v2,discard=async,subvol=@tmp /dev/mapper/cryptroot --mkdir /mnt/var/tmp
 mount -o noatime,ssd,compress=zstd:3,space_cache=v2,discard=async,subvol=@docker /dev/mapper/cryptroot --mkdir /mnt/var/lib/docker
-mount -o noatime,ssd,compress=zstd:3,space_cache=v2,discard=async,subvol=@docker /dev/mapper/cryptroot --mkdir /mnt/var/lib/ollama
+mount -o noatime,ssd,compress=zstd:3,space_cache=v2,discard=async,subvol=@ollama /dev/mapper/cryptroot --mkdir /mnt/var/lib/ollama
 mount ${esp} --mkdir /mnt/efi
 
 cp /etc/pacman.d/mirrorlist /etc/pacman.d/mirrorlist.bak
