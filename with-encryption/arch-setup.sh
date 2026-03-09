@@ -42,6 +42,69 @@ cryptsetup luksAddKey $main /etc/cryptsetup-keys.d/root.key
 sed -i 's|FILES=()|FILES=(/etc/cryptsetup-keys.d/root.key)|g' /etc/mkinitcpio.conf
 sed -i 's/MODULES=()/MODULES=(btrfs)/g' /etc/mkinitcpio.conf
 sed -i 's/\(block \)\(filesystems\)/\1encrypt \2/' /etc/mkinitcpio.conf
+mkinitcpio -p linux
+
+# Get UUID of encrypted partition
+uuid=$(sudo blkid -s UUID -o value $main)
+
+# Configure GRUB with proper encryption parameters
+sudo sed -i "s|GRUB_CMDLINE_LINUX_DEFAULT=\"loglevel=3 quiet\"|GRUB_CMDLINE_LINUX_DEFAULT=\"loglevel=3 quiet cryptdevice=UUID=${uuid}:cryptroot root=/dev/mapper/cryptroot rootflags=subvol=@\"|g" /etc/default/grub
+
+sudo sed -i "s|GRUB_CMDLINE_LINUX=\"\"|GRUB_CMDLINE_LINUX=\"cryptkey=rootfs:/etc/cryptsetup-keys.d/root.key\"|g" /etc/default/grub
+
+sudo sed -i 's|#GRUB_ENABLE_CRYPTODISK=y|GRUB_ENABLE_CRYPTODISK=y|g' /etc/default/grub
+sudo sed -i 's|/boot/grub|/efi/grub|g' /etc/grub.d/41_snapshots-btrfs
+
+mkinitcpio -P linux
+grub-install --target=x86_64-efi --boot-directory=/efi --efi-directory=/efi --bootloader-id=GRUB
+grub-mkconfig -o /efi/grub/grub.cfg
+
+systemctl enable NetworkManager
+systemctl enable reflector.timer
+systemctl enable fstrim.timer#!/usr/bin/env bash
+
+cd ~
+ln -sf /usr/share/zoneinfo/Asia/Kolkata /etc/localtime
+hwclock --systohc
+sed -i 's/#en_US.UTF-8/en_US.UTF-8/g' /etc/locale.gen
+locale-gen
+
+echo "LANG=en_US.UTF-8" >> /etc/locale.conf
+echo "KEYMAP=us" >> /etc/vconsole.conf
+echo "LAB" >> /etc/hostname
+echo "127.0.1.1       LAB" >> /etc/hosts
+
+echo "set the root password"
+passwd
+useradd -m -g users -G wheel Billi
+echo "set the user password"
+passwd Billi
+echo "Billi ALL=(ALL) ALL" >> /etc/sudoers.d/Billi
+
+pacman -Syu -y
+pacman -S grub grub-btrfs efibootmgr inotify-tools grub grub-btrfs -y
+
+lsblk
+echo "enter the disk you partitioned preceeding with /dev/"
+read disk
+
+echo "enter the disk type eg: nvme, sda, vda"
+read type
+
+if [[ "${type}" =~ "nvme" ]]; then
+    esp=${disk}p1
+    main=${disk}p2
+else
+    esp=${disk}1
+    main=${disk}2
+fi
+
+dd bs=512 count=4 if=/dev/random iflag=fullblock | install -m 0600 /dev/stdin /etc/cryptsetup-keys.d/root.key
+cryptsetup luksAddKey $main /etc/cryptsetup-keys.d/root.key
+
+sed -i 's|FILES=()|FILES=(/etc/cryptsetup-keys.d/root.key)|g' /etc/mkinitcpio.conf
+sed -i 's/MODULES=()/MODULES=(btrfs)/g' /etc/mkinitcpio.conf
+sed -i 's/\(block \)\(filesystems\)/\1encrypt \2/' /etc/mkinitcpio.conf
 #sed -i '55s/filesystem/encrypt filesystem/' /etc/mkinitcpio.conf
 mkinitcpio -p linux
 
